@@ -9,9 +9,9 @@
 
 <p align="left"> <a href="https://twitter.com/" target="blank"><img src="https://img.shields.io/twitter/follow/?logo=twitter&style=for-the-badge" alt="" /></a> </p>
 
-- 🌱 I’m currently learning **Javascript, Data Structures**
+- 🌱 I’m currently working as **Salesforce Developer**
 
-- 💬 Ask me about **HTML, CSS, JAVA,Javascript**
+- 💬 Ask me about **JAVA,Javascript,Apex,LWC,Integrations**
 
 - 📫 How to reach me **kajalt3020@gmail.com**
 

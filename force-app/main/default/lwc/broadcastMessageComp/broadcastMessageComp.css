@@ -1,0 +1,347 @@
+* {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    user-select: none;
+}
+
+.wrapper {
+    background-color: #ffffff;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background-image: url('/resource/wbiTemplateBg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 5px;
+}
+
+.heading-container {
+    padding: 0 1rem;
+}
+
+.heading {
+    font-size: x-large;
+    font-weight: 500;
+    text-align: center;
+}
+
+.back-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container {
+    overflow: auto;
+    flex: 1;
+}
+
+
+/* Custom Table Styling */
+
+.table-container {
+    margin-top: 1.5%;
+    border-radius: 0.4rem; 
+    /* border-top-right-radius: 0.4rem;  */
+    overflow-y:auto; 
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    border: 1px solid #dcdcdc; 
+    /* height : ; */
+    background-color: transparent;
+    
+}
+
+.table-container::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for Chrome, Safari and Opera */
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background: transparent;
+}
+
+/* Specific Styling for Sr. No Column */
+.sr-no {
+    width: 10%;
+    /* Narrow width for Sr. No */
+}
+
+.table th,
+.table td {
+    padding: 0.75rem;
+    text-align: center !important;
+}
+
+.table table {
+    position: sticky;
+    top: 0;
+}
+
+.table thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.table th {
+    background-color: #182051;
+    color: white;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.table td {
+    height: 10%;
+    padding: 10px;
+    font-size: 15px;
+    max-width: 200px;
+    overflow: visible;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    border: none;
+}
+
+.table tr:nth-child(even) {
+    background-color: white;
+
+}
+
+.table tr:nth-child(odd) {
+    background-color: #e9f1fbee;
+}
+
+.pagination-container {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    justify-content: center;
+}
+
+.pagination-button {
+    background-color: #ffffff;
+    border: 1px solid #d8d8d8;
+    color: #333;
+    padding: 6px 12px;
+    margin: 0 2px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border-radius: 0.3rem;
+    font-size: 12px;
+}
+
+.pagination-button svg {
+    fill: black;
+    width: 0.7rem;
+    height: 0.7rem;
+}
+
+.pagination-button:hover {
+    background-color: #f0f0f0;
+}
+
+.pagination-button.active {
+    background-color: #0070d2;
+    color: white;
+    border-color: #0070d2;
+}
+
+.pagination-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+span {
+    margin: 0 5px;
+}
+
+.pagination-button:first-child,
+.pagination-button:last-child {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.checkbox-column {
+    width: 40px;
+}
+
+/* Modal CSS */
+
+
+.modal-content {
+    padding: 0;
+    border-radius: 5px;
+    overflow: hidden;
+    background-image: url('/resource/wbiTemplateBg');
+}
+
+
+.modal-heading {
+    font-size: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    font-weight: 500;
+    color: white;
+    padding: 0.4rem;
+    background: #0077B6;
+}
+
+.modal-body {
+    padding: 1rem 1rem 0 1rem;
+}
+
+.modal-body-content {
+    width: 100%;
+    display: grid;
+    height: -webkit-fill-available;
+}
+
+.save-btn {
+    border: 1px solid #c7c7c7;
+    border-radius: 5px;
+    color: white;
+    padding: 0.3rem;
+    padding-left: 0.7rem;
+    padding-right: 0.7rem;
+    font-size: 14px;
+    background: #0070d2;
+}
+
+.close-btn {
+    border: 1px solid #c7c7c7;
+    border-radius: 3px;
+    color: black;
+    padding: 0.3rem;
+    padding-left: 0.7rem;
+    padding-right: 0.7rem;
+    font-size: 14px;
+    background: white;
+    font-weight: 500;
+}
+
+.footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0.5rem 1rem;
+    gap: 1rem;
+}
+
+.empty-state {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.no-records-message {
+    height: 100%;
+}
+
+.empty-state__content {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.empty-state__content .empty-state__icon {
+    width: 25%;
+    height: 100%;
+}
+
+.empty-state__content .empty-state__message {
+    color: #3a9bea;
+    font-size: 25px;
+    font-weight: 500;
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+}
+
+/* Container to properly position the badge relative to the button */
+.filter-button-container {
+    position: relative;
+    display: inline-block;
+    /* Ensures the container wraps the button tightly */
+}
+
+/* Styling for the badge */
+.filter-badge {
+    background-color: #0077B6;
+    color: #ffffff;
+    border-radius: 50%;
+    min-width: 20px;
+    height: 20px;
+    line-height: 20px;
+    font-size: 12px;
+    position: absolute;
+    top: -8px;
+    right: -12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    z-index: 1;
+    /* Ensures badge appears above the button */
+}
+
+.responsive-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/* CSV Uploader */
+
+.csv-file-input{
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .responsive-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .responsive-container .slds-col {
+        flex: 0 0 100%;
+        max-width: 100%;
+        margin-bottom: 1rem;
+        display: flex;
+        justify-content: center;
+    }
+
+    .responsive-container .slds-m-top_large {
+        margin-top: 0.5rem;
+    }
+
+    .filter-button-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .filter-button {
+        flex-grow: 1;
+        max-width: 200px;
+        /* Optional: limits button width for better appearance */
+    }
+
+    .filter-badge {
+        margin-left: 0.5rem;
+    }
+}

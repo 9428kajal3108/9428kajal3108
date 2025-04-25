@@ -1,0 +1,13 @@
+{
+  "orgName": "C:\WINDOWS\system32\config\systemprofile\.cargo\bin company",
+  "edition": "Developer",
+  "features": ["EnableSetPasswordInApi"],
+  "settings": {
+    "lightningExperienceSettings": {
+      "enableS1DesktopEnabled": true
+    },
+    "mobileSettings": {
+      "enableS1EncryptedStoragePref2": false
+    }
+  }
+}

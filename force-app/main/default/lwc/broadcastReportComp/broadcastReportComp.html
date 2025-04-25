@@ -1,0 +1,228 @@
+<template>
+    <template if:true={isAnyReportActive}>
+        <div class="wrapper">
+            <lightning-spinner 
+                alternative-text="Loading" 
+                size="medium"
+                variant="base"
+                if:true={isLoading}
+            ></lightning-spinner>
+    
+            <div class="heading-container slds-grid slds-grid">
+                <lightning-button label="Back" variant="brand" icon-position="left" icon-name="utility:chevronleft" onclick={handleBack}></lightning-button>
+                <h1 class="slds-align_absolute-center heading">Broadcast Report</h1>
+            </div>
+            <template if:true={broadcastReport}>
+                <template if:true={record}>
+                    <div class="slds-grid slds-wrap slds-gutters report-tabs">
+                        <div class="slds-col slds-size_3-of-12">
+                            <div class="info-box">
+                                <p class="label">Name</p>
+                                <p class="value">{name}</p>
+                            </div>
+                        </div>
+                        <div class="slds-col slds-size_3-of-12">
+                            <div class="info-box">
+                                <p class="label">Status</p>
+                                <p class="value">{status}</p>
+                            </div>
+                        </div>
+                        <div class="slds-col slds-size_3-of-12">
+                            <div class="info-box">
+                                <p class="label">Recipient Count</p>
+                                <p class="value">{recipientCount}</p>
+                            </div>
+                        </div>
+                    </div>
+            
+                    <div class="slds-m-around_medium container">
+                        <!-- Custom Table -->
+                        <template if:true={paginatedData.length}>
+                            <div class="table-container">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th class="sr-no">Sr. No</th>
+                                            <th>Group Name</th>
+                                            <th>Member Count</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <template for:each={paginatedData} for:item="row">
+                                            <tr key={row.Id} class="slds-table_bordered">
+                                                <td class="sr-no">{row.index}</td>
+                                                <td>
+                                                    <a href="javascript:void(0);" 
+                                                    class="clickable-name" 
+                                                    data-record-id={row.Id} 
+                                                    onclick={handleNameClick}>
+                                                    {row.Name}
+                                                    </a>
+                                                </td>
+                                                <td>{row.Count_of_Members__c}</td>
+                                            </tr>
+                                        </template>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </template>
+            
+                        <!-- No Records Message -->
+                        <template if:true={showNoRecordsMessage}>
+                            <div class="no-records-message">
+                                <div class="empty-state">
+                                    <div class="empty-state__content">
+                                        <div class="empty-state__icon">
+                                            <img src="/resource/emptyState" alt="" draggable="false">
+                                        </div>
+                                        <div class="empty-state__message">No Data Available to Show.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+            
+                    <template if:true={paginatedData.length}>
+                        <div class="pagination-container">
+                            <button class="pagination-button" disabled={isFirstPage} onclick={handlePrevious}>
+                                <svg xmlns="http://www.w3.org/2000/svg" height="52" width="52" viewBox="0 0 520 520" fill="#fff">
+                                    <path
+                                        d="M342 477 134 272c-6-6-6-16 0-22L342 45c6-6 16-6 22 0l22 22c6 6 6 16 0 22L221 250c-6 6-6 16 0 22l163 161c6 6 6 16 0 22l-22 22c-5 5-14 5-20 0z" />
+                                </svg>
+                                Previous
+                            </button>
+            
+                            <template for:each={pageNumbers} for:item="page">
+                                <template if:false={page.isEllipsis}>
+                                    <button key={page.number} data-id={page.number} class={page.className}
+                                        onclick={handlePageChange}>
+                                        {page.number}
+                                    </button>
+                                </template>
+                                <template if:true={page.isEllipsis}>
+                                    <span key={page.number} class="pagination-ellipsis">...</span>
+                                </template>
+                            </template>
+            
+                            <button class="pagination-button" disabled={isLastPage} onclick={handleNext}>
+                                Next
+                                <svg xmlns="http://www.w3.org/2000/svg" height="52" width="52" viewBox="0 0 520 520" fill="#fff">
+                                    <path
+                                        d="m179 44 207 205c6 6 6 16 0 22L179 476c-6 6-16 6-22 0l-22-22c-6-6-6-16 0-22l163-161c6-6 6-16 0-22L136 88c-6-6-6-16 0-22l22-22c6-5 15-5 21 0z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </template>
+            
+                </template>    
+            </template>
+            <template if:true={broadcastGroupReport}>
+                <div class="slds-grid slds-wrap slds-gutters report-tabs">
+                    <div class="slds-col slds-size_3-of-12">
+                        <div class="info-box">
+                            <p class="label">Group Name</p>
+                            <p class="value">{groupName}</p>
+                        </div>
+                    </div>
+                    <div class="slds-col slds-size_3-of-12">
+                        <div class="info-box">
+                            <p class="label">Member Count</p>
+                            <p class="value">{memberCount}</p>
+                        </div>
+                    </div>
+                </div>
+            
+                <template if:true={groupData}>
+                    <div class="slds-m-around_medium container">
+                        <!-- Custom Table -->
+                        <template if:true={paginatedGrpData.length}>
+                            <div class="table-container">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th class="sr-no">Sr. No</th>
+                                            <th>Group Member</th>
+                                            <th>Phone</th>
+                                            <th>Delivered</th>
+                                            <th>Read</th>
+                                            <th>Failed</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <template for:each={paginatedGrpData} for:item="row">
+                                            <tr key={row.Id} class="slds-table_bordered">
+                                                <td class="sr-no">{row.index}</td>
+                                                <td>
+                                                    <a href="javascript:void(0);" 
+                                                    class="clickable-name" 
+                                                    data-record-id={row.Id}>
+                                                    {row.Contact_ID__r.Name}
+                                                    </a>
+                                                </td>
+                                                <td>{row.Phone_Number__c}</td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                        </template>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </template> 
+            
+                        <!-- No Records Message -->
+                        <template if:true={showNoGroupMember}>
+                            <div class="no-records-message">
+                                <div class="empty-state">
+                                    <div class="empty-state__content">
+                                        <div class="empty-state__icon">
+                                            <img src="/resource/emptyState" alt="" draggable="false">
+                                        </div>
+                                        <div class="empty-state__message">No Data Available to Show.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+            
+                    <template if:true={paginatedGrpData.length}>
+                        <div class="pagination-container">
+                            <button class="pagination-button" disabled={isFirstGrpPage} onclick={handleGrpPrevious}>
+                                <svg xmlns="http://www.w3.org/2000/svg" height="52" width="52" viewBox="0 0 520 520" fill="#fff">
+                                    <path
+                                        d="M342 477 134 272c-6-6-6-16 0-22L342 45c6-6 16-6 22 0l22 22c6 6 6 16 0 22L221 250c-6 6-6 16 0 22l163 161c6 6 6 16 0 22l-22 22c-5 5-14 5-20 0z" />
+                                </svg>
+                                Previous
+                            </button>
+            
+                            <template for:each={pageGrpNumbers} for:item="page">
+                                <template if:false={page.isEllipsis}>
+                                    <button key={page.number} data-id={page.number} class={page.className}
+                                        onclick={handleGrpPageChange}>
+                                        {page.number}
+                                    </button>
+                                </template>
+                                <template if:true={page.isEllipsis}>
+                                    <span key={page.number} class="pagination-ellipsis">...</span>
+                                </template>
+                            </template>
+            
+                            <button class="pagination-button" disabled={isLastGrpPage} onclick={handleGrpNext}>
+                                Next
+                                <svg xmlns="http://www.w3.org/2000/svg" height="52" width="52" viewBox="0 0 520 520" fill="#fff">
+                                    <path
+                                        d="m179 44 207 205c6 6 6 16 0 22L179 476c-6 6-16 6-22 0l-22-22c-6-6-6-16 0-22l163-161c6-6 6-16 0-22L136 88c-6-6-6-16 0-22l22-22c6-5 15-5 21 0z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </template> 
+            
+                </template>   
+            </template>
+        </div>
+    </template>
+   
+    <template if:false={isAnyReportActive}>
+        <c-wb-all-broadcast-page></c-wb-all-broadcast-page>
+    </template>
+</template>

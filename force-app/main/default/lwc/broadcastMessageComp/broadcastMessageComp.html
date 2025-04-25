@@ -1,0 +1,324 @@
+<template>           
+    <template if:true={isCreateBroadcastComp}>
+        <div class="wrapper">
+
+            <!-- Spinner -->
+            <template if:true={isLoading}>
+                <div class="spinner-container">
+                    <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+                </div>
+            </template>
+    
+    
+            <div class="heading-container slds-grid slds-grid slds-grid_vertical-align-center slds-p-top_small">
+                <lightning-button label="Back" variant="brand" icon-position="left" icon-name="utility:chevronleft" onclick={handleBack}></lightning-button>
+                <h1 class="heading slds-grow">{broadcastHeading}</h1>
+                    <lightning-button label={createBtnLabel} variant="brand" onclick={handleModalOpen} disabled={isBtnDisabled}></lightning-button>
+            </div>
+    
+            <div class="slds-m-around_medium container">
+    
+                <!-- Comboboxes in Grid -->
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col">
+                        <lightning-combobox
+                            label="Select Object"
+                            value={selectedObject}
+                            options={objectOptions}
+                            onchange={handleObjectChange}>
+                        </lightning-combobox>
+                    </div>
+    
+                    <div class="slds-col">
+                        <lightning-combobox
+                            label="Select List View"
+                            value={selectedListView}
+                            options={listViewOptions}
+                            onchange={handleListViewChange}
+                            disabled={isListViewDropdownDisabled}>
+                        </lightning-combobox>
+                    </div>
+                </div>
+    
+                <div class="slds-m-top_medium slds-grid slds-grid_align-spread responsive-container">
+                    <div class="slds-col slds-size_8-of-12">
+                        <lightning-input 
+                            type="text" 
+                            label="Search Records" 
+                            placeholder="Search record by Name or Phone..." 
+                            onchange={handleSearch} 
+                            disabled={isSearchDisabled}>
+                        </lightning-input>
+                    </div> 
+                
+                    <template if:true={isContactObj}>
+                        <div class="slds-col slds-size_2-of-12 slds-m-top_large slds-grid slds-grid_align-end">
+                            <div class="filter-button-container">
+                                <lightning-button 
+                                    label="Filter" 
+                                    icon-name="utility:filter" 
+                                    variant="neutral" 
+                                    onclick={handleFilterModalOpen} 
+                                    disabled={isSearchDisabled}
+                                    class="filter-button">  
+                                </lightning-button>
+                                <template if:true={appliedFilterCount}>
+                                    <span class="filter-badge">{appliedFilterCount}</span>
+                                </template>
+                            </div>
+                        </div>
+                        <div class="slds-col slds-size_2-of-12 slds-m-top_large slds-grid slds-grid_align-end">
+                            <lightning-button 
+                                label="Reset Filters" 
+                                variant="neutral" 
+                                onclick={handleResetFilters} 
+                                disabled={isSearchDisabled}
+                                class="slds-float_right">
+                            </lightning-button>
+                        </div>
+                    </template>
+                    <template if:false={isContactObj}>
+                        <div class="slds-col slds-size_2-of-12 slds-m-top_large slds-grid slds-grid_align-end">
+                            <lightning-button 
+                                label="Upload CSV" 
+                                variant="neutral" 
+                                onclick={openFileSelector} 
+                                disabled={isSearchDisabled}
+                                class="slds-float_right">
+                            </lightning-button>
+                    
+                            <!-- Hidden file input -->
+                            <input 
+                                type="file" 
+                                accept=".csv" 
+                                onchange={handleCsvFileChange} 
+                                class="csv-file-input"
+                            />
+                        </div>
+                    </template>
+                    
+                </div>
+    
+                <!-- Custom Table -->
+                <template if:true={paginatedData.length}>
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="checkbox-column">
+                                        <lightning-input 
+                                            type="checkbox" 
+                                            checked={isAllSelected}
+                                            indeterminate={isIndeterminate}
+                                            onchange={handleSelectAll}>
+                                        </lightning-input>
+                                    </th>
+                                    <th class="sr-no">Sr. No</th>
+                                    <th>Name</th>
+                                    <th>Phone</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template for:each={paginatedData} for:item="row">
+                                    <tr key={row.Id} class="slds-table_bordered">
+                                        <td>
+                                            <lightning-input 
+                                                type="checkbox" 
+                                                checked={row.isSelected}
+                                                data-record-id={row.Id}
+                                                onchange={handleRecordSelection}>
+                                            </lightning-input>
+                                        </td>
+                                        <td class="sr-no">{row.index}</td>
+                                        <td>{row.name}</td>
+                                        <td>{row.phone}</td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                </template>
+    
+                <!-- No Records Message -->
+                <template if:true={showNoRecordsMessage}>
+                    <div class="no-records-message">
+                        <div class="empty-state">
+                            <div class="empty-state__content">
+                                <div class="empty-state__icon">
+                                    <img src="/resource/emptyState" alt="" draggable="false">
+                                </div>
+                                <div class="empty-state__message">No Data Available to Show.</div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+    
+            </div>
+    
+            <template if:true={paginatedData.length}>
+                <div class="pagination-container">
+                    <button class="pagination-button" disabled={isFirstPage} onclick={handlePrevious}>
+                        <svg xmlns="http://www.w3.org/2000/svg" height="52" width="52" viewBox="0 0 520 520"
+                            fill="#fff">
+                            <path
+                                d="M342 477 134 272c-6-6-6-16 0-22L342 45c6-6 16-6 22 0l22 22c6 6 6 16 0 22L221 250c-6 6-6 16 0 22l163 161c6 6 6 16 0 22l-22 22c-5 5-14 5-20 0z" />
+                        </svg>
+                        Previous
+                    </button>
+            
+                    <template for:each={pageNumbers} for:item="page">
+                        <template if:false={page.isEllipsis}>
+                            <button key={page.number} data-id={page.number} class={page.className}
+                                onclick={handlePageChange}>
+                                {page.number}
+                            </button>
+                        </template>
+                        <template if:true={page.isEllipsis}>
+                            <span key={page.number} class="pagination-ellipsis">...</span>
+                        </template>
+                    </template>
+            
+                    <button class="pagination-button" disabled={isLastPage} onclick={handleNext}>
+                        Next
+                        <svg xmlns="http://www.w3.org/2000/svg" height="52" width="52" viewBox="0 0 520 520"
+                            fill="#fff">
+                            <path
+                                d="m179 44 207 205c6 6 6 16 0 22L179 476c-6 6-16 6-22 0l-22-22c-6-6-6-16 0-22l163-161c6-6 6-16 0-22L136 88c-6-6-6-16 0-22l22-22c6-5 15-5 21 0z" />
+                        </svg>
+                    </button>
+                </div>
+            </template>
+    
+
+    
+            <template if:true={isCreateBroadcastModalOpen}>
+                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container">
+                        <div class="slds-modal__content slds-p-around_medium modal-content" id="modal-content-id-2">
+                            <div>
+                                <p class="modal-heading">Create Broadcast Group</p>
+                                <div class="modal-body">
+                                    <div class="modal-body-content">
+    
+                                        <lightning-input placeholder="Enter Name Here" type="text" label="Name" name="name" onchange={handleInputChange} value={broadcastGroupName} class="slds-m-bottom_medium" required message-when-value-missing=" "></lightning-input>
+
+                                        <lightning-textarea 
+                                            name="message"
+                                            label="Description"
+                                            placeholder="Enter Descriptive Message Here"
+                                            class="slds-m-bottom_medium"
+                                            value={messageText}
+                                            required
+                                            message-when-value-missing=" "
+                                            onchange={handleInputChange}>
+                                        </lightning-textarea>
+                                    </div>
+                                </div>
+                                <div class="footer">
+                                    <button class="save-btn" onclick={handleSave}>Save</button>
+                                    <button class="close-btn" onclick={closePopUp}>Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </template>        
+        
+        </div>
+
+    </template>
+
+    <template if:true={isAllBroadcastGroupPage}>
+        <c-wb-all-broadcast-group-page></c-wb-all-broadcast-group-page>
+    </template>
+
+    <!-- Filter Modal -->
+    <template if:true={isFilterModalOpen}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-filter" aria-modal="true" aria-describedby="modal-content-id-filter" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close" title="Close" onclick={handleFilterModalClose}>
+                        <lightning-icon icon-name="utility:close" size="small"></lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 id="modal-heading-filter" class="slds-modal__title">Filter Contacts</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-filter">
+                    <lightning-input 
+                        type="text" 
+                        label="Community (Propertyfinder)" 
+                        name="community" 
+                        placeholder="Enter Community" 
+                        value={filterCriteria.community}
+                        onchange={handleFilterInputChange}>
+                    </lightning-input>
+                    <lightning-input 
+                        type="text" 
+                        label="Area" 
+                        name="area" 
+                        placeholder="Enter Area" 
+                        value={filterCriteria.area}
+                        onchange={handleFilterInputChange}>
+                    </lightning-input>
+                    <lightning-input 
+                        type="text" 
+                        label="Building (Dubizzle)" 
+                        name="building" 
+                        placeholder="Enter Building" 
+                        value={filterCriteria.building}
+                        onchange={handleFilterInputChange}>
+                    </lightning-input>
+                    <lightning-combobox 
+                        label="Inquiry Type" 
+                        name="inquiryType" 
+                        placeholder="Select Inquiry Type" 
+                        options={inquiryTypeOptions}
+                        value={filterCriteria.inquiryType}
+                        onchange={handleFilterInputChange}>
+                    </lightning-combobox>
+                    <lightning-input 
+                        type="number" 
+                        label="Bedrooms - min" 
+                        name="bedroomMin" 
+                        placeholder="Enter Bedrooms - min" 
+                        min ="0"
+                        value={filterCriteria.bedroomMin}
+                        onchange={handleFilterInputChange}>
+                    </lightning-input>
+                    <lightning-input 
+                        type="number" 
+                        label="Bedrooms - max" 
+                        name="bedroomMax" 
+                        min ="0"
+                        placeholder="Enter Bedrooms - max"
+                        value={filterCriteria.bedroomMax}
+                        onchange={handleFilterInputChange}>
+                    </lightning-input>
+                    <lightning-combobox 
+                        label="Price Range" 
+                        name="priceRange" 
+                        placeholder="Select Price Range" 
+                        options={priceRangeOptions} 
+                        value={filterCriteria.priceRange}
+                        onchange={handleFilterInputChange}>
+                    </lightning-combobox>
+                    <lightning-dual-listbox 
+                        name="propertyTypes" 
+                        label="Property Type" 
+                        source-label="Available" 
+                        selected-label="Selected" 
+                        options={propertyTypeOptions} 
+                        value={filterCriteria.propertyTypes}
+                        onchange={handleFilterInputChange}>
+                    </lightning-dual-listbox>
+                </div>
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" onclick={handleFilterModalClose}>Cancel</button> 
+                    <button class="slds-button slds-button_brand" onclick={handleApplyFilters}>Apply</button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>

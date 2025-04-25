@@ -1,0 +1,315 @@
+* {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    user-select: none;
+}
+
+.wrapper {
+    background-color: #ffffff;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    background-image: url('/resource/wbiTemplateBg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius : 5px;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    overflow: scroll;
+    scrollbar-width: none !important;
+    flex-grow: 1;
+}
+
+.filterparent {
+    display: flex;
+    justify-content: space-between;
+    margin: 1rem;
+}
+
+.filterdiv {
+    display: flex;
+    gap: 2%;
+    width: -webkit-fill-available;
+}
+
+.custom-button {
+    display: inline-flex;
+    width: max-content;
+    justify-content: center;
+    height: -webkit-fill-available;
+    align-items: center;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    padding: 0.23rem;
+    padding-right: 0.5rem;
+    border: none;
+    box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 8px 0 rgba(0, 0, 0, 0.18);
+}
+
+.cus-btns{
+    background-color: white;
+}
+
+.custom-button:hover {
+    background-color: #F5F5F5;
+}
+
+.left-icon {
+    border: 1px solid;
+    border-radius: 50%;
+    padding: 0.2rem;
+    transform: scale(0.6);
+}
+
+.btns{
+    background-color: white;
+    color: #4194f9;
+    --sds-c-icon-color-foreground-default: rgb(70 164 245);
+}
+
+.search-div {
+    width: 50%;
+}
+
+.empty-state {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.no-records-message {
+    height: 100%;
+}
+
+.empty-state__content {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.empty-state__content .empty-state__icon {
+    width: 25%;
+    height: 100%;
+}
+
+.empty-state__content .empty-state__message {
+    color: #3a9bea;
+    font-size: 25px;
+    font-weight: 500;
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+}
+
+.heading {
+    font-size: x-large;
+    font-weight: 500;
+}
+
+.preview-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2.5rem;
+}
+
+.pop-up{
+    height: auto;
+    max-height: 74vh;
+    padding: 0;
+    border-radius: 5px;
+    overflow: hidden;
+    display: block;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background: transparent;
+}
+
+.sr-no {
+    width: 10%;
+}
+
+.table th, .table td {
+    padding: 0.75rem;
+    text-align: center !important;
+}
+
+.table thead{
+    position: sticky;
+    top: 0;
+}
+
+.table-name{
+    cursor: pointer;
+    color: #0082c7 !important;
+}
+
+.table th {
+    background-color: #182051;
+    color: white;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.table td{
+    height: 10%;
+    padding: 10px;
+    font-size: 15px;
+    max-width: 200px;
+    overflow: visible;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    border: none;
+}
+
+.table tr:nth-child(even) {
+    background-color: white;
+}
+
+.table tr:nth-child(odd) {
+    background-color: #e9f1fbee;
+}
+
+.pagination-container {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    justify-content: center;
+}
+
+.pagination-button {
+    background-color: #ffffff;
+    border: 1px solid #d8d8d8;
+    color: #333;
+    padding: 6px 12px;
+    margin: 0 2px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border-radius: 0.3rem;
+    font-size: 12px;
+}
+
+.pagination-button svg {
+    fill: black;
+    width: 0.7rem;
+    height: 0.7rem;
+}
+
+.pagination-button:hover {
+    background-color: #f0f0f0;
+}
+
+.pagination-button.active {
+    background-color: #0070d2;
+    color: white;
+    border-color: #0070d2;
+}
+
+.pagination-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+span {
+    margin: 0 5px;
+}
+
+.pagination-button:first-child,
+.pagination-button:last-child {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.popUpBody {
+    height: 100%;
+    background-image: url('/resource/wbiTemplateBg');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.pop-heading{
+    font-size: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    font-weight: 500;
+    color: white;
+    padding: 0.4rem;
+    background: #182051;
+}
+
+.box-container{
+    display: grid;
+    gap: 1rem;
+    max-height: 20rem;
+    overflow: scroll;
+    padding: 2px;
+    scrollbar-width: none;
+}
+
+.box-data{
+    display: flex;
+    gap: 6px;
+    padding: 10px;
+    box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+}
+
+.slds-text-heading_small {
+    color: #1a73e8;
+    font-weight: 600;
+}
+
+lightning-button.slds-button_brand {
+    background-color: #1a73e8;
+    border-color: #1a73e8;
+}
+
+lightning-button.slds-button_brand:hover {
+    background-color: #155abf;
+}
+
+.popUpFooter{
+    position: sticky;
+    bottom: 0;
+    padding-top: 1rem;
+}
+
+.table-container {
+    /* border-radius: 0.4rem;  */
+    
+    margin-top: 1.5%;
+    border-radius: 0.4rem; 
+    /* border-top-right-radius: 0.4rem;  */
+    overflow-y:auto; 
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    border: 1px solid #dcdcdc; 
+    /* height : ; */
+    flex-grow: 1;
+    background-color: transparent;
+    
+}
+
+.table-container::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for Chrome, Safari and Opera */
+}
+
+.clickable-name {
+    cursor: pointer;
+    text-decoration: none;
+}

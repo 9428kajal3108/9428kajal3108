@@ -1,0 +1,242 @@
+<template>
+    <template if:false={selectedRecordId}>
+        <div class="wrapper">
+            <!-- Spinner -->
+            <template if:true={isLoading}>
+                <div class="spinner-container">
+                    <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+                </div>
+            </template>
+
+            <h1 class="slds-text-align_center heading">Recent Broadcasts</h1>
+
+            <div class="filterparent">
+                <div class="filterdiv">
+                    <lightning-input variant="label-hidden" class="filter search-div" name="searchInput" type="search"
+                        placeholder="Search by Name..." onchange={handleSearch}></lightning-input>
+                </div>
+                <div class="btns">
+                    <button class="custom-button cus-btns" onclick={newBroadcast}>
+                        <lightning-icon icon-name="utility:add" alternative-text="Add" size="x-small"
+                            class="left-icon"></lightning-icon>
+                        <span>New Broadcast</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="slds-m-around_medium container">
+                <!-- Custom Table -->
+                <template if:true={paginatedData.length}>
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="sr-no">Sr. No</th>
+                                    <th>Name</th>
+                                    <th>Recipient Count</th>
+                                    <th>Status</th>
+                                    <th>Total Sent</th>
+                                    <th>Total Delivered</th>
+                                    <th>Total Read</th>
+                                    <th>Total Failed</th>
+                                    <th>Sent Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template for:each={paginatedData} for:item="row">
+                                    <tr key={row.Id} class="slds-table_bordered">
+                                        <td class="sr-no">{row.index}</td>
+                                        <td>
+                                            <a href="javascript:void(0);" 
+                                            class="clickable-name" 
+                                            data-record-id={row.Id} 
+                                            onclick={handleNameClick}>
+                                            {row.Name}
+                                            </a>
+                                        </td>
+                                        <td>{row.Recipient_Count__c}</td>
+                                        <td>{row.Status__c}</td>
+                                        <td>{row.Total_Sent__c}</td>
+                                        <td>{row.Total_Delivered__c}</td>
+                                        <td>{row.Total_Read__c}</td>
+                                        <td>{row.Total_Failed__c}</td>
+                                        <td>{row.formattedCreatedDate}</td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                </template>
+
+                <!-- No Records Message -->
+                <template if:true={showNoRecordsMessage}>
+                    <div class="no-records-message">
+                        <div class="empty-state">
+                            <div class="empty-state__content">
+                                <div class="empty-state__icon">
+                                    <img src="/resource/emptyState" alt="" draggable="false">
+                                </div>
+                                <div class="empty-state__message">No Data Available to Show.</div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <template if:true={paginatedData.length}>
+                <div class="pagination-container">
+                    <button class="pagination-button" disabled={isFirstPage} onclick={handlePrevious}>
+                        <svg xmlns="http://www.w3.org/2000/svg" height="52" width="52" viewBox="0 0 520 520" fill="#fff">
+                            <path
+                                d="M342 477 134 272c-6-6-6-16 0-22L342 45c6-6 16-6 22 0l22 22c6 6 6 16 0 22L221 250c-6 6-6 16 0 22l163 161c6 6 6 16 0 22l-22 22c-5 5-14 5-20 0z" />
+                        </svg>
+                        Previous
+                    </button>
+
+                    <template for:each={pageNumbers} for:item="page">
+                        <template if:false={page.isEllipsis}>
+                            <button key={page.number} data-id={page.number} class={page.className}
+                                onclick={handlePageChange}>
+                                {page.number}
+                            </button>
+                        </template>
+                        <template if:true={page.isEllipsis}>
+                            <span key={page.number} class="pagination-ellipsis">...</span>
+                        </template>
+                    </template>
+
+                    <button class="pagination-button" disabled={isLastPage} onclick={handleNext}>
+                        Next
+                        <svg xmlns="http://www.w3.org/2000/svg" height="52" width="52" viewBox="0 0 520 520" fill="#fff">
+                            <path
+                                d="m179 44 207 205c6 6 6 16 0 22L179 476c-6 6-16 6-22 0l-22-22c-6-6-6-16 0-22l163-161c6-6 6-16 0-22L136 88c-6-6-6-16 0-22l22-22c6-5 15-5 21 0z" />
+                        </svg>
+                    </button>
+                </div>
+            </template>
+
+            <template if:true={showPopup}>
+                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                    aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container">
+
+                        <!-- Close Button -->
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                            title="Close" onclick={handleCloseOnPopup}>
+                            <lightning-icon icon-name="utility:close" alternative-text="Close"
+                                size="small"></lightning-icon>
+                        </button>
+
+                        <div class="slds-modal__content slds-p-around_medium pop-up" id="modal-content-id-2">
+                            <div class="pop-heading">
+                                {popupHeader}
+                            </div>
+                            <template if:true={popUpFirstPage}>
+                                <div class="popUpBody slds-p-around--medium">
+                                    <!-- Header Section: Search and Create New Group Button -->
+                                    <div class="slds-m-bottom_medium">
+                                        <div class="slds-grid slds-gutters">
+                                            <div class="slds-col slds-size_6-of-12">
+                                                <lightning-input type="search" variant="label-hidden"
+                                                    placeholder="Search by Name..." onchange={handleSearchPopup}>
+                                                </lightning-input>
+                                            </div>
+                                            <div class="slds-col slds-size_3-of-12">
+                                                <lightning-input type="date" variant="label-hidden" placeholder="Start Date" value={startDate} onchange={handleStartDateChange}></lightning-input>
+                                            </div>
+                                            <div class="slds-col slds-size_3-of-12">
+                                                <lightning-input type="date" variant="label-hidden" placeholder="End Date" value={endDate} onchange={handleEndDateChange}></lightning-input>
+                                            </div>
+                                        </div>
+                                    
+                                    </div>
+
+                                    <!-- Groups List -->
+                                    <div class="box-container">
+                                        <template if:true={filteredGroups.length}>
+                                            <template for:each={filteredGroups} for:item="group">
+                                                <div key={group.Id} class="">
+                                                    <div class="box-data">
+                                                        <div>
+                                                            <lightning-input type="checkbox" label="Select"
+                                                                variant="label-hidden" data-id={group.Id}
+                                                                onchange={handleGroupSelection} checked={group.IsChecked}>
+                                                            </lightning-input>
+                                                        </div>
+                                                        <div class="">
+                                                            <h3 class="slds-text-heading_small">{group.Name}</h3>
+                                                            <p><strong>Members:</strong> {group.Count_of_Members__c}</p>
+                                                            <p><strong>Object of Group Members: </strong>
+                                                                {group.Object_Name__c}</p>
+                                                            <p><strong>Description:</strong> {group.Description__c}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </template>
+                                        </template>
+                                    </div>
+
+                                    <template if:true={filteredGroups.length}>
+                                        <div class="popUpFooter slds-text-align--center">
+                                            <lightning-button variant="brand-outline" onclick={handleCloseOnPopup}
+                                                label="Close" class="slds-m-left_x-small"></lightning-button>
+                                            <lightning-button variant="brand" label="Next" onclick={handleNextOnPopup}
+                                                class="slds-m-left_x-small" disabled={isNextDisabled}></lightning-button>
+                                        </div>
+                                    </template>
+
+                                    <template if:false={filteredGroups.length}>
+                                        <div class="empty-state__content">
+                                            <div class="empty-state__icon">
+                                                <img src="/resource/emptyState" alt="" draggable="false">
+                                            </div>
+                                            <div class="empty-state__message">No Data Available to Show.</div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </template>
+                            <template if:true={popUpSecondpage}>
+                                <div class="popUpBody slds-p-around--large">
+                                    <div>
+                                        <lightning-combobox name="template" label="Select Template"
+                                            options={templateOptions} onchange={handleInputChange} value={selectedTemplate}
+                                            required message-when-value-missing=" " class="slds-m-bottom_medium">
+                                        </lightning-combobox>
+                                    </div>
+                                </div>
+                                <div class="popUpFooter slds-text-align--center slds-p-bottom--large">
+                                    <lightning-button variant="brand-outline" onclick={handlePreviousOnPopup}
+                                        label="Previous" class="slds-m-left_x-small"></lightning-button>
+                                    <lightning-button variant="brand" label="Send" onclick={handleSendOnPopup}
+                                        class="slds-m-left_x-small"></lightning-button>
+                                    <lightning-button variant="brand" label="Schedule" onclick={handleSchedulePopup}
+                                        class="slds-m-left_x-small"></lightning-button>
+                                </div>
+                            </template>
+                            <template if:true={popUpLastPage}>
+                                <div
+                                    class="slds-grid slds-grid_vertical-align-center slds-grid_align-center slds-m-around_medium">
+                                    <lightning-input type="datetime-local" name="dateTime" value={selectedDateTime}
+                                        onchange={handleInputChange} class="slds-align_absolute-center"></lightning-input>
+                                </div>
+
+                                <div class="popUpFooter slds-text-align_center slds-p-bottom_large">
+                                    <lightning-button variant="brand-outline" onclick={handlePreviousLastpage}
+                                        label="Previous" class="slds-m-left_x-small"></lightning-button>
+                                    <lightning-button variant="brand" label="Schedule and Send" onclick={handleSchedule}
+                                        class="slds-m-left_x-small"></lightning-button>
+                                </div>
+                            </template>
+                        </div>
+
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </template>
+
+        </div>
+    </template>
+    <template if:true={selectedRecordId}>
+        <c-broadcast-report-comp record-id={selectedRecordId}></c-broadcast-report-comp>
+    </template>
+</template>
